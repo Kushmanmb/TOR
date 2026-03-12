@@ -1,0 +1,60 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# Environment and secrets — NEVER commit these
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+private_key*
+secret*
+credentials*
+
+# TOR-specific sensitive files
+torrc.private
+tor_private_key
+hidden_service/
+hs_ed25519_secret_key
+hs_ed25519_expand_secret_key
+onion_key
+onion_key_ntor
+client_keys
+
+# Build artifacts
+dist/
+build/
+out/
+coverage/
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Editor artifacts
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
