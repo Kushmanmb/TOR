@@ -1,0 +1,63 @@
+name: Fetch TOR API Key
+
+# This workflow demonstrates how to securely surface the TOR_API_KEY
+# from GitHub Secrets into a workflow without ever echoing the value.
+# It is triggered manually or on a schedule so the key can be rotated
+# and validated without modifying source code.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run — validate secret is set without connecting"
+        required: false
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+  schedule:
+    # Run key-validation check every Monday at 06:00 UTC
+    - cron: "0 6 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  validate-tor-api-key:
+    name: Validate TOR API Key
+    runs-on: [self-hosted, linux, x64]
+
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check TOR_API_KEY secret is set
+        env:
+          TOR_API_KEY: ${{ secrets.TOR_API_KEY }}
+        run: |
+          if [ -z "$TOR_API_KEY" ]; then
+            echo "::error::TOR_API_KEY secret is not configured. Add it in Settings → Secrets → Actions."
+            exit 1
+          fi
+          echo "TOR_API_KEY is set (length: ${#TOR_API_KEY} chars)."
+
+      - name: Validate key format (non-empty, no whitespace)
+        env:
+          TOR_API_KEY: ${{ secrets.TOR_API_KEY }}
+        run: |
+          node scripts/validate-tor-key.js
