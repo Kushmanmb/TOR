@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Environment files — never commit secrets
+.env
+.env.*
+!.env.example
+
+# TOR hidden service key material
+hs_ed25519_secret_key
+onion_key
+client_keys
+private_key
+
+# PKI / certificate material
+*.pem
+*.key
+*.crt
+
+# Build output
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
